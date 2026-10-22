@@ -407,19 +407,6 @@ button { font-family: var(--font); cursor: pointer; }
 .alert-error   { background: #fef2f2; color: #b91c1c; border-left: 4px solid #b91c1c; }
 .alert-success { background: #f0fdf4; color: #15803d; border-left: 4px solid #15803d; }
 
-/* ----------------------------------------------------------
-   9. Footer
-   ---------------------------------------------------------- */
-.site-footer {
-    background: var(--clr-text);
-    color: rgba(255,255,255,.75);
-    text-align: center;
-    padding: 24px 20px;
-    font-size: 0.85rem;
-    margin-top: 60px;
-}
-
-.site-footer a { color: var(--clr-green); }
 
 /* ----------------------------------------------------------
    10. Responsive Breakpoints

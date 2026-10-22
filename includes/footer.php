@@ -1,9 +1,6 @@
 <?php
-// includes/footer.php
+// includes/footer.php — footer dihapus, hanya tutup body/html & load script
 ?>
-    <footer class="site-footer">
-        <p>&copy; <?php echo date('Y'); ?> WisataKite &mdash; Temukan wisata terbaik Bangka Belitung</p>
-    </footer>
     <script src="assets/js/script.js"></script>
 </body>
 </html>

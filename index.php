@@ -6,6 +6,7 @@ require_once __DIR__ . '/config/database.php';
 $page_title   = 'WisataKite - Jelajahi Wisata Bangka Belitung';
 $css_file     = 'style.css';
 $current_page = 'home';
+$body_class   = 'page-home';
 
 include __DIR__ . '/includes/header.php';
 include __DIR__ . '/includes/navbar.php';
@@ -128,6 +129,7 @@ include __DIR__ . '/includes/sidebar.php';
             .then(json => {
                 if (!json.data || json.data.length === 0) {
                     showEmpty(category);
+                    syncHeights();
                     return;
                 }
                 grid.innerHTML = json.data.map(buildCard).join('');
@@ -136,9 +138,12 @@ include __DIR__ . '/includes/sidebar.php';
                 if (searchInput && searchInput.value.trim()) {
                     filterCards(searchInput.value.toLowerCase().trim());
                 }
+                // Equalise grid height with categories sidebar
+                syncHeights();
             })
             .catch(() => {
                 grid.innerHTML = '<div class="empty-state"><span>⚠️</span><p>Gagal memuat destinasi. Silakan coba lagi.</p></div>';
+                syncHeights();
             });
     }
 
@@ -163,6 +168,24 @@ include __DIR__ . '/includes/sidebar.php';
             filterCards(this.value.toLowerCase().trim());
         });
     }
+
+    // ── Sync card grid height = categories sidebar height ──────────────
+    function syncHeights() {
+        const cats = document.querySelector('.categories');
+        if (!cats || !grid) return;
+        // Reset first so natural height can be measured
+        grid.style.height = '';
+        grid.style.minHeight = '';
+        // Set grid height to match categories sidebar
+        const h = cats.offsetHeight;
+        if (h > 0) {
+            grid.style.height    = h + 'px';
+            grid.style.minHeight = h + 'px';
+        }
+    }
+
+    // Also sync on window resize
+    window.addEventListener('resize', syncHeights);
 
     // Load default on page ready (3 destinasi semua kategori)
     loadCategory('all');

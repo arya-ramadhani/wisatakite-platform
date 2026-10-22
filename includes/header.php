@@ -18,4 +18,4 @@ $css_file = isset($css_file) ? $css_file : 'style.css';
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="stylesheet" href="assets/css/<?php echo htmlspecialchars($css_file); ?>">
 </head>
-<body>
+<body<?php echo isset($body_class) ? ' class="'.htmlspecialchars($body_class).'"' : ''; ?>>
