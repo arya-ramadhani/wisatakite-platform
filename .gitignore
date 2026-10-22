@@ -1,0 +1,22 @@
+# Environment and credentials
+.env
+.env.local
+
+# Composer
+/vendor/
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS Generated
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+# Log files
+*.log

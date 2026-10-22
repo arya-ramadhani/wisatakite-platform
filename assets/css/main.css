@@ -1,0 +1,439 @@
+/* ============================================================
+   main.css — WisataKite Global Stylesheet
+   Berisi: reset, typography, navbar, sidebar, footer, utilities
+   ============================================================ */
+
+/* ----------------------------------------------------------
+   0. Google Font & CSS Variables
+   ---------------------------------------------------------- */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --clr-green:     #1e7a40;
+    --clr-green-dk:  #155c30;
+    --clr-blue:      #1d4e8f;
+    --clr-blue-dk:   #163970;
+    --clr-bg:        #f5f7fa;
+    --clr-white:     #ffffff;
+    --clr-text:      #1a1a2e;
+    --clr-muted:     #6b7280;
+    --clr-border:    #e5e7eb;
+    --clr-shadow:    rgba(0,0,0,.10);
+    --nav-h:         60px;
+    --sidebar-w:     280px;
+    --radius:        12px;
+    --radius-sm:     8px;
+    --transition:    0.3s ease;
+    --font:         'Plus Jakarta Sans', Arial, sans-serif;
+}
+
+/* ----------------------------------------------------------
+   1. Reset & Base
+   ---------------------------------------------------------- */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+    font-family: var(--font);
+    background-color: var(--clr-bg);
+    color: var(--clr-text);
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+img { display: block; max-width: 100%; }
+a { text-decoration: none; color: inherit; }
+ul { list-style: none; }
+button { font-family: var(--font); cursor: pointer; }
+
+/* ----------------------------------------------------------
+   2. Navbar / Header
+   ---------------------------------------------------------- */
+.header {
+    background-color: var(--clr-white);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    height: var(--nav-h);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 16px var(--clr-shadow);
+    border-bottom: 3px solid var(--clr-green);
+}
+
+/* Logo */
+.header h1 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.header h1 a {
+    color: var(--clr-green);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Nav links */
+.header .nav {
+    display: flex;
+    align-items: center;
+    gap: 36px;
+}
+
+.header .nav a {
+    color: var(--clr-blue);
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    text-decoration: none;
+    position: relative;
+    padding-bottom: 3px;
+    transition: color var(--transition);
+}
+
+.header .nav a::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 2px;
+    background: var(--clr-green);
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    transition: width var(--transition);
+}
+
+.header .nav a:hover,
+.header .nav a.active {
+    color: var(--clr-green);
+}
+
+.header .nav a:hover::after,
+.header .nav a.active::after {
+    width: 100%;
+}
+
+/* Guest / User button in nav */
+#guest-btn {
+    background: var(--clr-blue);
+    color: var(--clr-white) !important;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    transition: background var(--transition);
+}
+
+#guest-btn:hover {
+    background: var(--clr-green) !important;
+    color: var(--clr-white) !important;
+}
+
+#guest-btn::after { display: none !important; }
+
+/* Hamburger button (mobile) */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 40px;
+    height: 40px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 1100;
+    padding: 4px;
+}
+
+.hamburger span {
+    display: block;
+    width: 24px;
+    height: 2.5px;
+    background: var(--clr-blue);
+    border-radius: 4px;
+    transition: transform var(--transition), opacity var(--transition);
+}
+
+.hamburger.open span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
+
+/* ----------------------------------------------------------
+   3. Mobile Nav Drawer
+   ---------------------------------------------------------- */
+.nav-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.45);
+    z-index: 900;
+    opacity: 0;
+    transition: opacity var(--transition);
+}
+
+.nav-overlay.active { opacity: 1; }
+
+.mobile-nav {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 280px;
+    height: 100%;
+    background: var(--clr-white);
+    z-index: 950;
+    padding: 80px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: right var(--transition);
+    box-shadow: -4px 0 24px var(--clr-shadow);
+}
+
+.mobile-nav.active { right: 0; }
+
+.mobile-nav a {
+    display: block;
+    padding: 14px 18px;
+    color: var(--clr-blue);
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: var(--radius-sm);
+    transition: background var(--transition), color var(--transition);
+}
+
+.mobile-nav a:hover,
+.mobile-nav a.active {
+    background: var(--clr-green);
+    color: var(--clr-white);
+}
+
+/* ----------------------------------------------------------
+   4. Profile Sidebar (slide-in from left)
+   ---------------------------------------------------------- */
+.profile-sidebar {
+    position: fixed;
+    top: 0;
+    left: calc(-1 * var(--sidebar-w));
+    width: var(--sidebar-w);
+    height: 100%;
+    background: var(--clr-white);
+    box-shadow: 4px 0 24px var(--clr-shadow);
+    transition: left var(--transition);
+    z-index: 800;
+    overflow-y: auto;
+    padding-top: var(--nav-h);
+}
+
+.profile-sidebar.active { left: 0; }
+
+.profile-header {
+    background: linear-gradient(135deg, var(--clr-blue) 0%, var(--clr-green) 100%);
+    text-align: center;
+    padding: 24px 16px 20px;
+    color: var(--clr-white);
+    border-radius: 0 0 var(--radius) var(--radius);
+}
+
+.profile-header h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-top: 8px;
+}
+
+.profile-header .profile-pic img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid rgba(255,255,255,.5);
+    margin: 0 auto;
+}
+
+.profile-menu {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.profile-menu li a {
+    display: block;
+    padding: 12px 18px;
+    color: var(--clr-text);
+    background: var(--clr-bg);
+    border-radius: 30px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-align: center;
+    transition: background var(--transition), color var(--transition), transform var(--transition);
+}
+
+.profile-menu li a:hover {
+    background: var(--clr-blue);
+    color: var(--clr-white);
+    transform: translateX(4px);
+}
+
+/* Sidebar backdrop */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.35);
+    z-index: 700;
+    opacity: 0;
+    transition: opacity var(--transition);
+}
+
+.sidebar-overlay.active { opacity: 1; }
+
+/* ----------------------------------------------------------
+   5. Shared Form Styles
+   ---------------------------------------------------------- */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--clr-text);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid var(--clr-border);
+    border-radius: var(--radius-sm);
+    font-family: var(--font);
+    font-size: 0.95rem;
+    background: var(--clr-white);
+    color: var(--clr-text);
+    transition: border-color var(--transition), box-shadow var(--transition);
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--clr-green);
+    box-shadow: 0 0 0 3px rgba(30,122,64,.15);
+}
+
+.form-group textarea { resize: vertical; min-height: 100px; }
+
+/* ----------------------------------------------------------
+   6. Shared Button Styles
+   ---------------------------------------------------------- */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 30px;
+    font-family: var(--font);
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background var(--transition), transform 0.15s, box-shadow var(--transition);
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: var(--clr-green);
+    color: var(--clr-white);
+}
+
+.btn-primary:hover {
+    background: var(--clr-green-dk);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(30,122,64,.3);
+}
+
+.btn-secondary {
+    background: var(--clr-blue);
+    color: var(--clr-white);
+}
+
+.btn-secondary:hover {
+    background: var(--clr-blue-dk);
+    transform: translateY(-1px);
+}
+
+/* ----------------------------------------------------------
+   7. Card shared style
+   ---------------------------------------------------------- */
+.card {
+    background: var(--clr-white);
+    border-radius: var(--radius);
+    box-shadow: 0 2px 12px var(--clr-shadow);
+    overflow: hidden;
+}
+
+/* ----------------------------------------------------------
+   8. Alert / Message banners
+   ---------------------------------------------------------- */
+.alert {
+    padding: 12px 18px;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 16px;
+}
+
+.alert-error   { background: #fef2f2; color: #b91c1c; border-left: 4px solid #b91c1c; }
+.alert-success { background: #f0fdf4; color: #15803d; border-left: 4px solid #15803d; }
+
+/* ----------------------------------------------------------
+   9. Footer
+   ---------------------------------------------------------- */
+.site-footer {
+    background: var(--clr-text);
+    color: rgba(255,255,255,.75);
+    text-align: center;
+    padding: 24px 20px;
+    font-size: 0.85rem;
+    margin-top: 60px;
+}
+
+.site-footer a { color: var(--clr-green); }
+
+/* ----------------------------------------------------------
+   10. Responsive Breakpoints
+   ---------------------------------------------------------- */
+
+@media (max-width: 900px) {
+    .header { padding: 0 20px; }
+    .header .nav { display: none; }
+    .hamburger { display: flex; }
+    .nav-overlay { display: block; }
+    .mobile-nav { display: flex; }
+}
+
+@media (max-width: 600px) {
+    .header { padding: 0 16px; }
+    .profile-sidebar { width: 100%; left: -100%; }
+}

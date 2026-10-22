@@ -1,0 +1,127 @@
+/* news.css — Halaman Berita */
+@import url('main.css');
+
+/* ----------------------------------------------------------
+   News page container
+   ---------------------------------------------------------- */
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: calc(var(--nav-h) + 40px) 20px 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+/* Section heading */
+.news-heading {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--clr-blue);
+    margin-bottom: 8px;
+}
+
+/* ----------------------------------------------------------
+   Article card
+   ---------------------------------------------------------- */
+.article {
+    display: flex;
+    flex-direction: row;
+    background: var(--clr-white);
+    border-radius: var(--radius);
+    box-shadow: 0 2px 16px var(--clr-shadow);
+    overflow: hidden;
+    transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.article:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0,0,0,.12);
+}
+
+.article.reverse { flex-direction: row-reverse; }
+
+.article img {
+    width: 42%;
+    height: auto;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.article .content {
+    padding: 28px 28px;
+    width: 58%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+}
+
+.article h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--clr-text);
+    line-height: 1.4;
+}
+
+.article h3 {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--clr-green);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.article p {
+    font-size: 0.875rem;
+    color: var(--clr-muted);
+    text-align: justify;
+    line-height: 1.7;
+    -webkit-line-clamp: 4;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Read more button */
+.content a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+    padding: 10px 22px;
+    background: var(--clr-green);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 25px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    transition: background var(--transition), transform 0.15s;
+    align-self: flex-start;
+}
+
+.content a:hover {
+    background: var(--clr-green-dk);
+    transform: translateY(-1px);
+}
+
+/* ----------------------------------------------------------
+   Responsive
+   ---------------------------------------------------------- */
+@media (max-width: 700px) {
+    .article,
+    .article.reverse {
+        flex-direction: column;
+    }
+
+    .article img { width: 100%; max-height: 220px; }
+
+    .article .content {
+        width: 100%;
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container { padding: calc(var(--nav-h) + 20px) 12px 40px; }
+}
