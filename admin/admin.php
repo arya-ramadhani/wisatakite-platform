@@ -253,7 +253,7 @@ require_once __DIR__ . '/../actions/admin/data_aksi.php';
                                     </td>
                                     <td>
                                         <?php if (!empty($d['izin_destinasi'])): ?>
-                                            <a href="../assets/img/izin_destinasi/<?php echo htmlspecialchars($d['izin_destinasi']); ?>" target="_blank" style="color:var(--clr-blue); font-weight:600; font-size:0.8rem; text-decoration:underline;">
+                                            <a href="../assets/img/izin_destinasi/<?php echo htmlspecialchars($d['izin_destinasi']); ?>" target="_blank" style="color:var(--clr-green); font-weight:600; font-size:0.8rem; text-decoration:underline;">
                                                 Lihat Berkas
                                             </a>
                                         <?php else: ?>

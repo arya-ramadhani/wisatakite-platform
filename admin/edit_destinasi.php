@@ -58,7 +58,7 @@ $d            = mysqli_fetch_assoc($data);
                     <input type="file" id="izin_destinasi" name="izin_destinasi" accept=".jpg,.jpeg,.png,.pdf">
                     <?php if (!empty($d['izin_destinasi'])): ?>
                         <div style="margin-top:6px;">
-                            <a href="../assets/img/izin_destinasi/<?php echo htmlspecialchars($d['izin_destinasi']); ?>" target="_blank" style="font-size:0.75rem;color:var(--clr-blue);text-decoration:underline;">
+                            <a href="../assets/img/izin_destinasi/<?php echo htmlspecialchars($d['izin_destinasi']); ?>" target="_blank" style="font-size:0.75rem;color:var(--clr-green);text-decoration:underline;">
                                 📄 Lihat berkas saat ini
                             </a>
                         </div>

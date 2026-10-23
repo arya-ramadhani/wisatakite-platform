@@ -9,22 +9,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 :root {
-    --clr-green:     #1e7a40;
-    --clr-green-dk:  #155c30;
-    --clr-blue:      #1d4e8f;
-    --clr-blue-dk:   #163970;
-    --clr-bg:        #f5f7fa;
-    --clr-white:     #ffffff;
-    --clr-text:      #1a1a2e;
-    --clr-muted:     #6b7280;
-    --clr-border:    #e5e7eb;
-    --clr-shadow:    rgba(0,0,0,.10);
-    --nav-h:         60px;
-    --sidebar-w:     280px;
-    --radius:        12px;
-    --radius-sm:     8px;
-    --transition:    0.3s ease;
-    --font:         'Plus Jakarta Sans', Arial, sans-serif;
+    --clr-green:      #1e7a40;
+    --clr-green-dk:   #155c30;
+    --clr-green-deep: #0e3d20;
+    --clr-green-lt:   #ecfdf5;
+    --clr-green-mint: #22c55e;
+    --clr-blue:       #1e7a40;
+    --clr-blue-dk:    #155c30;
+    --clr-bg:         #f6faf7;
+    --clr-white:      #ffffff;
+    --clr-text:       #111827;
+    --clr-muted:      #64748b;
+    --clr-border:     #e2e8f0;
+    --clr-shadow:     rgba(14, 61, 32, 0.08);
+    --nav-h:          60px;
+    --sidebar-w:      280px;
+    --radius:         12px;
+    --radius-sm:      8px;
+    --transition:     0.3s ease;
+    --font:          'Plus Jakarta Sans', Arial, sans-serif;
 }
 
 /* ----------------------------------------------------------
@@ -59,7 +62,7 @@ button { font-family: var(--font); cursor: pointer; }
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 40px;
+    padding: 0 24px;
     height: var(--nav-h);
     position: fixed;
     top: 0;
@@ -93,7 +96,7 @@ button { font-family: var(--font); cursor: pointer; }
 }
 
 .header .nav a {
-    color: var(--clr-blue);
+    color: #1f2937;
     font-weight: 600;
     font-size: 0.9rem;
     letter-spacing: 0.5px;
@@ -128,18 +131,21 @@ button { font-family: var(--font); cursor: pointer; }
 
 /* Guest / User button in nav */
 #guest-btn {
-    background: var(--clr-blue);
+    background: var(--clr-green);
     color: var(--clr-white) !important;
     padding: 8px 18px;
     border-radius: 20px;
     font-size: 0.85rem;
     font-weight: 700;
-    transition: background var(--transition);
+    transition: background var(--transition), transform 0.15s, box-shadow var(--transition);
+    box-shadow: 0 3px 10px rgba(30, 122, 64, 0.25);
 }
 
 #guest-btn:hover {
-    background: var(--clr-green) !important;
+    background: var(--clr-green-dk) !important;
     color: var(--clr-white) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(21, 92, 48, 0.35);
 }
 
 #guest-btn::after { display: none !important; }
@@ -164,7 +170,7 @@ button { font-family: var(--font); cursor: pointer; }
     display: block;
     width: 24px;
     height: 2.5px;
-    background: var(--clr-blue);
+    background: var(--clr-green);
     border-radius: 4px;
     transition: transform var(--transition), opacity var(--transition);
 }
@@ -209,7 +215,7 @@ button { font-family: var(--font); cursor: pointer; }
 .mobile-nav a {
     display: block;
     padding: 14px 18px;
-    color: var(--clr-blue);
+    color: #1f2937;
     font-weight: 600;
     font-size: 1rem;
     border-radius: var(--radius-sm);
@@ -242,7 +248,7 @@ button { font-family: var(--font); cursor: pointer; }
 .profile-sidebar.active { left: 0; }
 
 .profile-header {
-    background: linear-gradient(135deg, var(--clr-blue) 0%, var(--clr-green) 100%);
+    background: linear-gradient(135deg, var(--clr-green-deep) 0%, var(--clr-green) 100%);
     text-align: center;
     padding: 24px 16px 20px;
     color: var(--clr-white);
@@ -284,9 +290,10 @@ button { font-family: var(--font); cursor: pointer; }
 }
 
 .profile-menu li a:hover {
-    background: var(--clr-blue);
+    background: var(--clr-green);
     color: var(--clr-white);
     transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(30, 122, 64, 0.2);
 }
 
 /* Sidebar backdrop */
@@ -374,13 +381,14 @@ button { font-family: var(--font); cursor: pointer; }
 }
 
 .btn-secondary {
-    background: var(--clr-blue);
+    background: var(--clr-green-dk);
     color: var(--clr-white);
 }
 
 .btn-secondary:hover {
-    background: var(--clr-blue-dk);
+    background: var(--clr-green-deep);
     transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(14, 61, 32, 0.3);
 }
 
 /* ----------------------------------------------------------
@@ -413,7 +421,7 @@ button { font-family: var(--font); cursor: pointer; }
    ---------------------------------------------------------- */
 
 @media (max-width: 900px) {
-    .header { padding: 0 20px; }
+    .header { padding: 0 16px; }
     .header .nav { display: none; }
     .hamburger { display: flex; }
     .nav-overlay { display: block; }
@@ -421,6 +429,6 @@ button { font-family: var(--font); cursor: pointer; }
 }
 
 @media (max-width: 600px) {
-    .header { padding: 0 16px; }
+    .header { padding: 0 12px; }
     .profile-sidebar { width: 100%; left: -100%; }
 }

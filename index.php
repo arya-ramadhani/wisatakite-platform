@@ -25,9 +25,12 @@ include __DIR__ . '/includes/sidebar.php';
     <div class="content">
         <h2>Wisata<span>Kite</span></h2>
         <p class="hero-tagline">Temukan &amp; Jelajahi Keindahan Wisata Terbaik di Bangka Belitung</p>
-        <div class="search-bar">
-            <input type="text" id="search-input" placeholder="Cari destinasi wisata..." aria-label="Cari destinasi">
-            <button type="button" aria-label="Cari">🔍</button>
+        <div class="search-wrapper">
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Cari destinasi wisata..." aria-label="Cari destinasi" autocomplete="off">
+                <button type="button" id="search-btn" aria-label="Cari">🔍</button>
+            </div>
+            <div id="search-dropdown" class="search-dropdown" role="listbox" aria-label="Rekomendasi Destinasi"></div>
         </div>
     </div>
 </section>
@@ -59,6 +62,7 @@ include __DIR__ . '/includes/sidebar.php';
             <div class="card-skeleton"></div>
             <div class="card-skeleton"></div>
             <div class="card-skeleton"></div>
+            <div class="card-skeleton"></div>
         </div>
     </div>
 
@@ -73,7 +77,6 @@ include __DIR__ . '/includes/sidebar.php';
     const catLinks    = document.querySelectorAll('.cat-link');
     const sectionTitle    = document.getElementById('section-title');
     const sectionSubtitle = document.getElementById('section-subtitle');
-    const searchInput = document.getElementById('search-input');
 
     const TITLES = {
         all:     ['Destinasi Pilihan',    'Rekomendasi objek wisata pantai, gugusan pulau eksotis, dan situs bersejarah'],
@@ -82,8 +85,8 @@ include __DIR__ . '/includes/sidebar.php';
         sejarah: ['Wisata Sejarah',       'Warisan budaya dan situs bersejarah Bangka Belitung'],
     };
 
-    // Jumlah kartu yang ditampilkan di home: hanya 3
-    const HOME_LIMIT = 3;
+    // Jumlah kartu yang ditampilkan di home: hanya 4
+    const HOME_LIMIT = 4;
 
     function buildCard(d) {
         return `<article class="destination-card" data-name="${d.name.toLowerCase()}" data-location="${d.location.toLowerCase()}">
@@ -95,13 +98,13 @@ include __DIR__ . '/includes/sidebar.php';
                 <span>📍 ${d.location}</span>
             </div>
             <div class="destination-card-footer">
-                <a href="detail.php?id=${d.id}" class="go-button">Lihat Detail &rarr;</a>
+                <a href="${d.url || 'detail.php?id=' + d.id}" class="go-button">Lihat Detail &rarr;</a>
             </div>
         </article>`;
     }
 
     function showSkeleton() {
-        grid.innerHTML = '<div class="card-skeleton"></div><div class="card-skeleton"></div><div class="card-skeleton"></div>';
+        grid.innerHTML = '<div class="card-skeleton"></div><div class="card-skeleton"></div><div class="card-skeleton"></div><div class="card-skeleton"></div>';
     }
 
     function showEmpty(category) {
@@ -122,7 +125,7 @@ include __DIR__ . '/includes/sidebar.php';
         // Update active state kategori
         catLinks.forEach(l => l.classList.toggle('active-cat', l.dataset.category === category));
 
-        // Fetch JSON
+        // Fetch JSON kategori tanpa terpengaruh oleh pencarian
         const url = `api/destinations.php?category=${encodeURIComponent(category)}&limit=${HOME_LIMIT}`;
         fetch(url)
             .then(r => r.json())
@@ -133,25 +136,12 @@ include __DIR__ . '/includes/sidebar.php';
                     return;
                 }
                 grid.innerHTML = json.data.map(buildCard).join('');
-
-                // Re-apply search filter if user typed something
-                if (searchInput && searchInput.value.trim()) {
-                    filterCards(searchInput.value.toLowerCase().trim());
-                }
-                // Equalise grid height with categories sidebar
                 syncHeights();
             })
             .catch(() => {
                 grid.innerHTML = '<div class="empty-state"><span>⚠️</span><p>Gagal memuat destinasi. Silakan coba lagi.</p></div>';
                 syncHeights();
             });
-    }
-
-    function filterCards(query) {
-        grid.querySelectorAll('.destination-card').forEach(card => {
-            const text = card.dataset.name + ' ' + card.dataset.location;
-            card.style.display = text.includes(query) ? '' : 'none';
-        });
     }
 
     // Category link click (no page refresh)
@@ -162,32 +152,17 @@ include __DIR__ . '/includes/sidebar.php';
         });
     });
 
-    // Real-time search
-    if (searchInput) {
-        searchInput.addEventListener('input', function () {
-            filterCards(this.value.toLowerCase().trim());
-        });
-    }
-
-    // ── Sync card grid height = categories sidebar height ──────────────
+    // Biarkan kartu punya tinggi natural — tidak perlu sync height
     function syncHeights() {
-        const cats = document.querySelector('.categories');
-        if (!cats || !grid) return;
-        // Reset first so natural height can be measured
-        grid.style.height = '';
+        if (!grid) return;
+        grid.style.height    = '';
         grid.style.minHeight = '';
-        // Set grid height to match categories sidebar
-        const h = cats.offsetHeight;
-        if (h > 0) {
-            grid.style.height    = h + 'px';
-            grid.style.minHeight = h + 'px';
-        }
     }
 
-    // Also sync on window resize
+    // Reset jika resize
     window.addEventListener('resize', syncHeights);
 
-    // Load default on page ready (3 destinasi semua kategori)
+    // Load default on page ready (4 destinasi semua kategori)
     loadCategory('all');
 
 })();

@@ -15,7 +15,7 @@ $css_file = isset($css_file) ? $css_file : 'style.css';
     <title><?php echo htmlspecialchars($page_title); ?></title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="assets/css/main.css">
-    <link rel="stylesheet" href="assets/css/<?php echo htmlspecialchars($css_file); ?>">
+    <link rel="stylesheet" href="assets/css/main.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="assets/css/<?php echo htmlspecialchars($css_file); ?>?v=<?php echo time(); ?>">
 </head>
 <body<?php echo isset($body_class) ? ' class="'.htmlspecialchars($body_class).'"' : ''; ?>>

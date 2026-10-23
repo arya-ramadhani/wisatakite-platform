@@ -22,9 +22,12 @@ include __DIR__ . '/includes/sidebar.php';
     <div class="content">
         <h2>🏝️ Wisata <span>Pulau</span></h2>
         <p class="hero-tagline">Gugusan Pulau Tropis Menawan di Tengah Birunya Laut Bangka Belitung</p>
-        <div class="search-bar">
-            <input type="text" id="search-input" placeholder="Cari pulau eksotis..." aria-label="Cari pulau">
-            <button type="button" aria-label="Cari">🔍</button>
+        <div class="search-wrapper">
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Cari pulau eksotis..." aria-label="Cari pulau" autocomplete="off">
+                <button type="button" id="search-btn" aria-label="Cari">🔍</button>
+            </div>
+            <div id="search-dropdown" class="search-dropdown" role="listbox" aria-label="Rekomendasi Destinasi"></div>
         </div>
     </div>
 </section>
@@ -104,17 +107,3 @@ include __DIR__ . '/includes/sidebar.php';
 </main>
 
 <?php include __DIR__ . '/includes/footer.php'; ?>
-<script>
-(function () {
-    const searchInput = document.getElementById('search-input');
-    const grid = document.getElementById('cards-grid');
-    if (searchInput && grid) {
-        searchInput.addEventListener('input', function () {
-            const q = this.value.toLowerCase().trim();
-            grid.querySelectorAll('.destination-card').forEach(c => {
-                c.style.display = c.textContent.toLowerCase().includes(q) ? '' : 'none';
-            });
-        });
-    }
-})();
-</script>

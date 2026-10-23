@@ -12,9 +12,9 @@ body.page-home {
     flex-direction: column;
 }
 
-/* ── Hero: kompak, clear navbar fixed ── */
+/* ── Hero ── */
 body.page-home .search-section {
-    height: 190px;
+    height: 320px;
     flex-shrink: 0;
     margin-top: var(--nav-h);
 }
@@ -32,32 +32,23 @@ body.page-home .search-section .content {
     gap: 8px;
 }
 
-/* Search bar diperkecil */
-body.page-home .search-bar {
-    width: min(380px, 80vw);
-}
-
-body.page-home .search-bar input {
-    padding: 8px 16px;
-    font-size: 0.85rem;
-}
-
-body.page-home .search-bar button {
-    padding: 8px 16px;
-    font-size: 0.95rem;
+/* Search wrapper di home dibuat proporsional dan presisi */
+body.page-home .search-wrapper {
+    width: min(460px, 90vw);
 }
 
 /* ── Area konten mengisi sisa tinggi ── */
 body.page-home #main-content {
     flex: 1;
-    min-height: 0;              /* kunci agar flex child bisa menyusut */
+    min-height: 0;
     display: flex;
     flex-direction: column;
-    padding: 12px 24px 12px;
+    padding: 12px 20px 12px;
     width: 100%;
-    max-width: 1240px;
+    max-width: 1400px;
     margin: 0 auto;
     box-sizing: border-box;
+    overflow: hidden;
 }
 
 /* Section header kompak */
@@ -83,21 +74,22 @@ body.page-home .main-layout-row {
     align-items: flex-start;    /* natural heights, JS syncs card grid */
 }
 
-/* Cards grid — height set by JS syncHeights() */
+/* Cards grid — 4 kolom fix di home, tinggi natural */
 body.page-home .destination-cards {
-    overflow: hidden;
-    /* height & minHeight set dynamically by JS */
+    overflow: visible;
+    grid-template-columns: repeat(4, 1fr);
+    align-content: start;
 }
 
-/* Setiap kartu mengisi penuh tinggi grid */
+/* Kartu punya tinggi natural (tidak dipaksa fill container) */
 body.page-home .destination-card {
-    height: 100%;
+    height: auto;
     min-height: 0;
 }
 
-/* Image: tinggi tetap, sisanya untuk konten teks & tombol */
+/* Image kartu */
 body.page-home .destination-card-img-wrap {
-    height: 160px;
+    height: 170px;
     flex: none;
     overflow: hidden;
 }
@@ -143,9 +135,10 @@ body.page-home .categories a {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    overflow: hidden;
+    overflow: visible; /* Diubah agar dropdown rekomendasi pencarian tidak terpotong */
     margin-top: 0;
     width: 100%;
+    z-index: 30;
 }
 
 /* Dark gradient overlay over slider for readability */
@@ -210,6 +203,7 @@ body.page-home .categories a {
     gap: 16px;
     padding: 0 20px;
     max-width: 720px;
+    width: 100%;
 }
 
 .search-section h2 {
@@ -234,33 +228,47 @@ body.page-home .categories a {
     margin: 0;
 }
 
-/* Search bar */
+/* Search Wrapper & Search Bar (Presisi & Simetris) */
+.search-wrapper {
+    position: relative;
+    width: min(500px, 92vw);
+    margin: 0 auto;
+    z-index: 100;
+    box-sizing: border-box;
+}
+
 .search-bar {
     display: flex;
     align-items: center;
     background: #ffffff;
     border-radius: 50px;
-    overflow: hidden;
-    box-shadow: 0 10px 35px rgba(0,0,0,.3);
-    width: min(520px, 92vw);
-    border: 2px solid rgba(255,255,255,.3);
-    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
+    width: 100% !important;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    padding: 4px 5px 4px 20px;
+    box-sizing: border-box;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
 }
 
 .search-bar:focus-within {
     transform: translateY(-2px);
-    box-shadow: 0 14px 40px rgba(0,0,0,.4);
+    box-shadow: 0 14px 38px rgba(0, 0, 0, 0.32);
+    border-color: var(--clr-green);
 }
 
 .search-bar input {
     flex: 1;
-    padding: 15px 24px;
+    min-width: 0;
+    height: 38px;
+    line-height: 38px;
+    padding: 0 10px 0 0;
     border: none;
     background: transparent;
     font-family: var(--font);
-    font-size: 0.98rem;
+    font-size: 0.95rem;
     color: var(--clr-text);
     outline: none;
+    box-sizing: border-box;
 }
 
 .search-bar input::placeholder {
@@ -268,29 +276,244 @@ body.page-home .categories a {
 }
 
 .search-bar button {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    border-radius: 50%;
     background: var(--clr-green);
     color: #fff;
     border: none;
-    padding: 15px 26px;
+    padding: 0;
+    margin: 0;
     cursor: pointer;
-    font-size: 1.1rem;
-    transition: background var(--transition);
+    font-size: 1.05rem;
+    transition: background var(--transition), transform 0.15s;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(30, 122, 64, 0.35);
 }
 
 .search-bar button:hover {
     background: var(--clr-green-dk);
+    transform: scale(1.06);
+}
+
+/* ----------------------------------------------------------
+   Search Dropdown Rekomendasi
+   ---------------------------------------------------------- */
+.search-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    width: 100%;
+    box-sizing: border-box;
+    background: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.08);
+    max-height: 380px;
+    overflow-y: auto;
+    z-index: 999;
+    padding: 8px;
+    display: none;
+    text-align: left;
+    animation: searchDropdownFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes searchDropdownFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.search-dropdown.show {
+    display: block;
+}
+
+.search-dropdown-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px 6px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid #f1f5f9;
+    margin-bottom: 4px;
+}
+
+.search-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    text-decoration: none;
+    color: var(--clr-text);
+    transition: background 0.15s ease, transform 0.15s ease;
+    cursor: pointer;
+}
+
+.search-item:hover,
+.search-item.highlighted {
+    background: #f1f5f9;
+    outline: none;
+}
+
+.search-item-img {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    object-fit: cover;
+    flex-shrink: 0;
+    background: #e2e8f0;
+}
+
+.search-item-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.search-item-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #0f172a;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.search-item-name mark {
+    background: rgba(74, 222, 128, 0.35);
+    color: inherit;
+    font-weight: 700;
+    padding: 0 2px;
+    border-radius: 3px;
+}
+
+.search-item-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    color: #64748b;
+}
+
+.search-item-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.search-item-badge.badge-pantai {
+    background: #ecfdf5;
+    color: #059669;
+}
+
+.search-item-badge.badge-pulau {
+    background: #ecfdf5;
+    color: #059669;
+}
+
+.search-item-badge.badge-sejarah {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.search-item-arrow {
+    color: #94a3b8;
+    font-size: 1.1rem;
+    padding-right: 4px;
+    transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.search-item:hover .search-item-arrow,
+.search-item.highlighted .search-item-arrow {
+    color: var(--clr-green);
+    transform: translateX(3px);
+}
+
+.search-empty {
+    padding: 24px 16px;
+    text-align: center;
+    color: #64748b;
+}
+
+.search-empty-icon {
+    font-size: 2rem;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.search-empty-text {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 4px;
+}
+
+.search-loading {
+    padding: 24px;
+    text-align: center;
+    color: #64748b;
+    font-size: 0.88rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.search-spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #e2e8f0;
+    border-top-color: var(--clr-green);
+    border-radius: 50%;
+    animation: searchSpin 0.6s linear infinite;
+}
+
+@keyframes searchSpin {
+    to { transform: rotate(360deg); }
+}
+
+.search-dropdown::-webkit-scrollbar {
+    width: 6px;
+}
+.search-dropdown::-webkit-scrollbar-track {
+    background: transparent;
+}
+.search-dropdown::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+.search-dropdown::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
 }
 
 /* ----------------------------------------------------------
    Categories + Cards Section Layout
    ---------------------------------------------------------- */
 .categories-container {
-    max-width: 1240px;
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 40px 24px 70px;
+    padding: 24px 20px 40px;
 }
 
 /* Section Header (Title + See all link) */
@@ -299,16 +522,16 @@ body.page-home .categories a {
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 16px;
-    margin-bottom: 28px;
-    padding-bottom: 16px;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
     border-bottom: 2px solid var(--clr-border);
 }
 
 .section-header-title h2 {
     font-size: 1.6rem;
     font-weight: 800;
-    color: var(--clr-blue);
+    color: var(--clr-green-deep);
     line-height: 1.2;
 }
 
@@ -323,19 +546,20 @@ body.page-home .categories a {
     align-items: center;
     gap: 6px;
     padding: 10px 22px;
-    background: var(--clr-blue);
+    background: var(--clr-green);
     color: #fff;
     border-radius: 25px;
     font-size: 0.85rem;
     font-weight: 700;
     text-decoration: none;
     transition: all var(--transition);
+    box-shadow: 0 4px 14px rgba(30, 122, 64, 0.25);
 }
 
 .btn-all-destinations:hover {
-    background: var(--clr-blue-dk);
+    background: var(--clr-green-dk);
     transform: translateY(-1px);
-    box-shadow: 0 4px 14px rgba(29,78,143,.25);
+    box-shadow: 0 6px 18px rgba(21, 92, 48, 0.35);
 }
 
 /* Two-column layout: sidebar categories + cards grid */
@@ -576,7 +800,7 @@ body.page-home .categories a {
     }
 
     .categories-container {
-        padding: 24px 16px 50px;
+        padding: 14px 12px 28px;
     }
 
     .section-header-row {

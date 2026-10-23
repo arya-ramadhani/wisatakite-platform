@@ -12,12 +12,45 @@ include __DIR__ . '/includes/navbar.php';
 include __DIR__ . '/includes/sidebar.php';
 ?>
 
-<main class="container-detail">
-    <?php
+<?php
+$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+$q_search = isset($_GET['q']) ? trim($_GET['q']) : (isset($_GET['search']) ? trim($_GET['search']) : '');
+
+if ($id > 0) {
+    $data = mysqli_query($koneksi, "SELECT * FROM destinasi WHERE keterangan_destinasi = 'Di Terima' AND id_destinasi = $id");
+} elseif (!empty($q_search)) {
+    $safe_q = mysqli_real_escape_string($koneksi, $q_search);
+    $data = mysqli_query($koneksi, "SELECT * FROM destinasi WHERE keterangan_destinasi = 'Di Terima' AND (nama_destinasi LIKE '%$safe_q%' OR alamat_destinasi LIKE '%$safe_q%' OR deskripsi_destinasi LIKE '%$safe_q%')");
+} else {
     $data = mysqli_query($koneksi, "SELECT * FROM destinasi WHERE keterangan_destinasi = 'Di Terima'");
+}
+
+$found_count = ($data) ? mysqli_num_rows($data) : 0;
+?>
+
+<main class="container-detail">
+    <?php if ($id > 0 || !empty($q_search)): ?>
+        <div style="margin-bottom: 24px; padding: 12px 18px; background: #ffffff; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+            <p style="margin: 0; color: #334155; font-size: 0.95rem;">
+                <?php if ($found_count > 0): ?>
+                    Menampilkan hasil: <strong><?php echo htmlspecialchars(!empty($q_search) ? $q_search : 'Destinasi Terpilih'); ?></strong> (<?php echo $found_count; ?> ditemukan)
+                <?php else: ?>
+                    Destinasi khusus "<strong><?php echo htmlspecialchars(!empty($q_search) ? $q_search : '#'.$id); ?></strong>" belum ada di database. Menampilkan seluruh destinasi tersedia:
+                <?php endif; ?>
+            </p>
+            <a href="detail.php" class="go-button" style="padding: 7px 16px; font-size: 0.85rem;">&larr; Lihat Semua Destinasi</a>
+        </div>
+    <?php endif; ?>
+
+    <?php
+    // Jika filter spesifik tidak menghasilkan baris di database, tampilkan semua destinasi
+    if ($found_count === 0 && ($id > 0 || !empty($q_search))) {
+        $data = mysqli_query($koneksi, "SELECT * FROM destinasi WHERE keterangan_destinasi = 'Di Terima'");
+    }
+
     while ($d = mysqli_fetch_assoc($data)):
     ?>
-    <article class="dest-entry">
+    <article class="dest-entry" id="dest-<?php echo $d['id_destinasi']; ?>">
         <!-- Image -->
         <div class="dest-img-wrap">
             <img
