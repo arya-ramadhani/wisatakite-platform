@@ -190,9 +190,10 @@ button { font-family: var(--font); cursor: pointer; }
     z-index: 900;
     opacity: 0;
     transition: opacity var(--transition);
+    pointer-events: none; /* Jangan blokir klik saat overlay tidak aktif */
 }
 
-.nav-overlay.active { opacity: 1; }
+.nav-overlay.active { opacity: 1; pointer-events: auto; }
 
 .mobile-nav {
     position: fixed;
@@ -305,9 +306,11 @@ button { font-family: var(--font); cursor: pointer; }
     z-index: 700;
     opacity: 0;
     transition: opacity var(--transition);
+    pointer-events: none;
 }
 
-.sidebar-overlay.active { opacity: 1; }
+.sidebar-overlay.active { opacity: 1; pointer-events: auto; }
+
 
 /* ----------------------------------------------------------
    5. Shared Form Styles

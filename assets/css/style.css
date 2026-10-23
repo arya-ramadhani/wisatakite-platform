@@ -2,128 +2,133 @@
 @import url('main.css');
 
 /* ==========================================================
-   PAGE-HOME: 1 halaman penuh tanpa scroll
+   PAGE-HOME: Desktop-only (1 halaman penuh tanpa scroll)
+   Semua aturan di bawah HANYA aktif di layar ≥ 901px
    ========================================================== */
+@media (min-width: 901px) {
 
-body.page-home {
-    height: 100vh;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-}
+    body.page-home {
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
 
-/* ── Hero ── */
-body.page-home .search-section {
-    height: 320px;
-    flex-shrink: 0;
-    margin-top: var(--nav-h);
-}
+    /* ── Hero ── */
+    body.page-home .search-section {
+        height: 320px;
+        flex-shrink: 0;
+        margin-top: var(--nav-h);
+    }
 
-/* Judul hero lebih kecil */
-body.page-home .search-section h2 {
-    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
-}
+    /* Judul hero lebih kecil */
+    body.page-home .search-section h2 {
+        font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    }
 
-body.page-home .hero-tagline {
-    font-size: 0.82rem;
-}
+    body.page-home .hero-tagline {
+        font-size: 0.82rem;
+    }
 
-body.page-home .search-section .content {
-    gap: 8px;
-}
+    body.page-home .search-section .content {
+        gap: 8px;
+    }
 
-/* Search wrapper di home dibuat proporsional dan presisi */
-body.page-home .search-wrapper {
-    width: min(460px, 90vw);
-}
+    /* Search wrapper di home dibuat proporsional dan presisi */
+    body.page-home .search-wrapper {
+        width: min(460px, 90vw);
+    }
 
-/* ── Area konten mengisi sisa tinggi ── */
-body.page-home #main-content {
-    flex: 1;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-    padding: 12px 20px 12px;
-    width: 100%;
-    max-width: 1400px;
-    margin: 0 auto;
-    box-sizing: border-box;
-    overflow: hidden;
-}
+    /* ── Area konten mengisi sisa tinggi ── */
+    body.page-home #main-content {
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        padding: 12px 20px 12px;
+        width: 100%;
+        max-width: 1400px;
+        margin: 0 auto;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
 
-/* Section header kompak */
-body.page-home .section-header-row {
-    flex-shrink: 0;
-    margin-bottom: 8px;
-    padding-bottom: 8px;
-}
+    /* Section header kompak */
+    body.page-home .section-header-row {
+        flex-shrink: 0;
+        margin-bottom: 8px;
+        padding-bottom: 8px;
+    }
 
-body.page-home .section-header-title h2 { font-size: 1.15rem; }
-body.page-home .section-header-title p  { font-size: 0.78rem; }
+    body.page-home .section-header-title h2 { font-size: 1.15rem; }
+    body.page-home .section-header-title p  { font-size: 0.78rem; }
 
-body.page-home .btn-all-destinations {
-    padding: 7px 16px;
-    font-size: 0.78rem;
-}
+    body.page-home .btn-all-destinations {
+        padding: 7px 16px;
+        font-size: 0.78rem;
+    }
 
-/* Layout row: kedua kolom sama tinggi (stretch) */
-body.page-home .main-layout-row {
-    flex: 1;
-    min-height: 0;
-    overflow: visible;
-    align-items: flex-start;    /* natural heights, JS syncs card grid */
-}
+    /* Layout row: kedua kolom sama tinggi (stretch) */
+    body.page-home .main-layout-row {
+        flex: 1;
+        min-height: 0;
+        overflow: visible;
+        align-items: flex-start;
+    }
 
-/* Cards grid — 4 kolom fix di home, tinggi natural */
-body.page-home .destination-cards {
-    overflow: visible;
-    grid-template-columns: repeat(4, 1fr);
-    align-content: start;
-}
+    /* Cards grid — 4 kolom fix di home, tinggi natural */
+    body.page-home .destination-cards {
+        overflow: visible;
+        grid-template-columns: repeat(4, 1fr);
+        align-content: start;
+    }
 
-/* Kartu punya tinggi natural (tidak dipaksa fill container) */
-body.page-home .destination-card {
-    height: auto;
-    min-height: 0;
-}
+    /* Kartu punya tinggi natural */
+    body.page-home .destination-card {
+        height: auto;
+        min-height: 0;
+    }
 
-/* Image kartu */
-body.page-home .destination-card-img-wrap {
-    height: 170px;
-    flex: none;
-    overflow: hidden;
-}
+    /* Image kartu */
+    body.page-home .destination-card-img-wrap {
+        height: 170px;
+        flex: none;
+        overflow: hidden;
+    }
 
-/* Body & footer kompak */
-body.page-home .destination-card-body {
-    flex-shrink: 0;
-    padding: 10px 14px 6px;
-}
+    /* Body & footer kompak */
+    body.page-home .destination-card-body {
+        flex-shrink: 0;
+        padding: 10px 14px 6px;
+    }
 
-body.page-home .destination-card p   { font-size: 0.9rem; }
-body.page-home .destination-card span { font-size: 0.75rem; }
+    body.page-home .destination-card p   { font-size: 0.9rem; }
+    body.page-home .destination-card span { font-size: 0.75rem; }
 
-body.page-home .destination-card-footer {
-    flex-shrink: 0;
-    padding: 0 14px 12px;
-}
+    body.page-home .destination-card-footer {
+        flex-shrink: 0;
+        padding: 0 14px 12px;
+    }
 
-body.page-home .go-button {
-    padding: 6px 16px;
-    font-size: 0.78rem;
-}
+    body.page-home .go-button {
+        padding: 6px 16px;
+        font-size: 0.78rem;
+    }
 
-/* Sidebar: stretch sama tinggi dengan cards grid */
-body.page-home .categories {
-    position: static;
-    flex-shrink: 0;
-    /* align-self: stretch (default) — mengikuti tinggi row */
-}
+    /* Sidebar: stretch sama tinggi dengan cards grid */
+    body.page-home .categories {
+        position: static;
+        flex-shrink: 0;
+    }
 
-body.page-home .categories a {
-    padding: 8px 14px;
-    font-size: 0.82rem;
-}
+    body.page-home .categories a {
+        padding: 8px 14px;
+        font-size: 0.82rem;
+    }
+
+} /* end @media (min-width: 901px) */
+
+
 
 /* ----------------------------------------------------------
    Hero / Search Section
@@ -767,12 +772,104 @@ body.page-home .categories a {
 }
 
 /* ----------------------------------------------------------
-   Responsive
+   Responsive — MOBILE / ANDROID
    ---------------------------------------------------------- */
-@media (max-width: 960px) {
+
+/* ── Tablet & phablet (≤ 900px) ── */
+@media (max-width: 900px) {
+
+    /* Buka kunci scroll body.page-home di mobile */
+    body.page-home {
+        height: auto;
+        min-height: 100vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Hero / search section — tinggi adaptif, sisakan ruang untuk navbar fixed */
+    body.page-home .search-section {
+        height: auto;
+        min-height: 240px;
+        margin-top: var(--nav-h);
+        padding: 24px 16px 32px;
+        flex-shrink: 0;
+    }
+
+    /* Main content — biarkan tinggi alami agar bisa discroll */
+    body.page-home #main-content {
+        flex: none;
+        height: auto;
+        min-height: 0;
+        overflow: visible;
+        padding: 16px 16px 40px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        display: block;
+    }
+
+    /* Section header */
+    body.page-home .section-header-row {
+        flex-shrink: 0;
+        margin-bottom: 12px;
+    }
+
+    /* Layout row: kolom tunggal, tidak side-by-side */
+    body.page-home .main-layout-row {
+        flex-direction: column;
+        flex: none;
+        min-height: 0;
+        overflow: visible;
+        gap: 16px;
+        align-items: stretch;
+    }
+
+    /* Kategori: horizontal scrollable pills */
+    body.page-home .categories {
+        flex: none !important;
+        width: 100% !important;
+        position: static !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        overflow-y: visible !important;
+        -webkit-overflow-scrolling: touch;
+        padding: 4px 0 10px !important;
+        gap: 8px !important;
+        scrollbar-width: none;
+    }
+    body.page-home .categories::-webkit-scrollbar { display: none; }
+
+    body.page-home .categories p {
+        display: none; /* Sembunyikan label "Kategori" di mobile */
+    }
+
+    body.page-home .categories a {
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+        padding: 9px 16px !important;
+        font-size: 0.88rem !important;
+        transform: none !important;
+    }
+
+    /* Cards grid: 2 kolom di tablet */
+    body.page-home .destination-cards {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+        overflow: visible;
+        width: 100%;
+    }
+
+    body.page-home .destination-card-img-wrap {
+        height: 160px;
+    }
+
+    /* General layout tweaks */
     .main-layout-row {
         flex-direction: column;
-        gap: 24px;
+        gap: 20px;
     }
 
     .categories {
@@ -781,7 +878,8 @@ body.page-home .categories a {
         position: static;
         flex-direction: row;
         flex-wrap: wrap;
-        padding: 16px;
+        padding: 12px;
+        gap: 8px;
     }
 
     .categories a {
@@ -794,19 +892,35 @@ body.page-home .categories a {
     }
 }
 
-@media (max-width: 640px) {
+/* ── Ponsel kecil (≤ 600px) ── */
+@media (max-width: 600px) {
+
+    /* Hero lebih pendek */
+    body.page-home .search-section {
+        min-height: 200px;
+        padding: 55px 12px 28px;
+    }
+
     .search-section {
-        height: 220px;
+        height: auto;
+        min-height: 200px;
+        padding-top: 55px;
+        padding-bottom: 24px;
     }
 
-    .categories-container {
-        padding: 14px 12px 28px;
+    /* Search wrapper full width */
+    .search-wrapper,
+    body.page-home .search-wrapper {
+        width: 100% !important;
+        max-width: 100% !important;
     }
 
-    .section-header-row {
+    /* Section header column */
+    .section-header-row,
+    body.page-home .section-header-row {
         flex-direction: column;
         align-items: flex-start;
-        gap: 12px;
+        gap: 10px;
     }
 
     .btn-all-destinations {
@@ -814,30 +928,42 @@ body.page-home .categories a {
         justify-content: center;
     }
 
+    /* Cards: 2 kolom di ponsel standar */
+    body.page-home .destination-cards,
     .destination-cards {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 14px;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
     }
 
+    body.page-home .destination-card-img-wrap,
     .destination-card-img-wrap {
         height: 130px;
     }
 
     .destination-card-body {
-        padding: 12px;
+        padding: 10px 12px 6px;
     }
 
     .destination-card-footer {
-        padding: 0 12px 12px;
+        padding: 0 12px 10px;
+    }
+
+    .categories-container {
+        padding: 14px 12px 28px;
     }
 }
 
-@media (max-width: 440px) {
+/* ── Ponsel sangat kecil (≤ 420px) ── */
+@media (max-width: 420px) {
+
+    /* 1 kolom pada layar super kecil */
+    body.page-home .destination-cards,
     .destination-cards {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr !important;
     }
 
+    body.page-home .destination-card-img-wrap,
     .destination-card-img-wrap {
-        height: 180px;
+        height: 190px !important;
     }
 }
