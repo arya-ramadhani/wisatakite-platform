@@ -21,57 +21,256 @@ require_once __DIR__ . '/../actions/admin/data_aksi.php';
 <body>
 
 <div class="admin-wrapper">
+    <!-- Mobile Backdrop Overlay -->
+    <div id="admin-sidebar-overlay" class="admin-sidebar-overlay" title="Klik untuk menutup sidebar"></div>
+
     <!-- Sidebar -->
-    <aside class="sidebar">
+    <aside class="sidebar" id="admin-sidebar">
+        <!-- Sidebar Brand Bar -->
+        <div class="sidebar-brand-bar">
+            <div class="brand-info">
+                <span class="brand-icon">🌴</span>
+                <span class="brand-title">WisataKite</span>
+            </div>
+            <button type="button" id="sidebar-close-btn" class="sidebar-close-btn" aria-label="Tutup Sidebar" title="Tutup Menu">
+                ✕
+            </button>
+        </div>
+
+        <!-- Profile Widget -->
         <div class="profile">
             <img src="../assets/img/admin.png" alt="Admin Avatar">
-            <div>
+            <div class="profile-info">
                 <h2><?php echo htmlspecialchars($_SESSION['username']); ?></h2>
                 <p>Administrator</p>
             </div>
         </div>
 
+        <!-- Navigation Menu -->
         <nav class="menu" aria-label="Menu Admin">
             <ul>
-                <li><a href="#home" class="active-menu">🏠 Beranda</a></li>
-                <li><a href="#akun">👥 Kelola Akun</a></li>
-                <li><a href="#informasi">📋 Informasi Pribadi</a></li>
-                <li><a href="#destinasi">🗺️ Destinasi Wisata</a></li>
-                <li><a href="#pemesanan">🎫 Pemesanan</a></li>
-                <li><a href="../index.php" target="_blank">🌐 Lihat Website</a></li>
+                <li>
+                    <a href="#home" class="active-menu" title="Beranda">
+                        <span class="menu-main">
+                            <span class="menu-icon">🏠</span>
+                            <span class="menu-text">Beranda</span>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#akun" title="Kelola Akun">
+                        <span class="menu-main">
+                            <span class="menu-icon">👥</span>
+                            <span class="menu-text">Kelola Akun</span>
+                        </span>
+                        <span class="menu-badge"><?php echo (int)$total_akun; ?></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#informasi" title="Informasi Pribadi">
+                        <span class="menu-main">
+                            <span class="menu-icon">📋</span>
+                            <span class="menu-text">Informasi Pribadi</span>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#destinasi" title="Destinasi Wisata">
+                        <span class="menu-main">
+                            <span class="menu-icon">🗺️</span>
+                            <span class="menu-text">Destinasi Wisata</span>
+                        </span>
+                        <span class="menu-badge"><?php echo (int)$total_destinasi; ?></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#pemesanan" title="Pemesanan & Reservasi">
+                        <span class="menu-main">
+                            <span class="menu-icon">🎫</span>
+                            <span class="menu-text">Pemesanan</span>
+                        </span>
+                        <span class="menu-badge"><?php echo (int)$total_pemesanan; ?></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#semua" title="Tampilkan Semua Bagian">
+                        <span class="menu-main">
+                            <span class="menu-icon">📑</span>
+                            <span class="menu-text">Semua Bagian</span>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="../index.php" target="_blank" title="Lihat Website Publik">
+                        <span class="menu-main">
+                            <span class="menu-icon">🌐</span>
+                            <span class="menu-text">Lihat Website</span>
+                        </span>
+                    </a>
+                </li>
             </ul>
         </nav>
 
-        <a href="../actions/auth/logout.php" class="logout1" onclick="return confirm('Apakah Anda yakin ingin keluar dari panel admin?')">
-            🚪 Keluar
+        <a href="../actions/auth/logout.php" class="logout1" onclick="return confirm('Apakah Anda yakin ingin keluar dari panel admin?')" title="Keluar">
+            <span class="menu-icon">🚪</span>
+            <span class="logout-text">Keluar</span>
         </a>
     </aside>
 
     <!-- Content Container -->
     <main class="content-container">
+        <!-- Top Bar Header -->
+        <header class="admin-topbar">
+            <div class="topbar-left">
+                <button type="button" id="admin-sidebar-toggle" class="sidebar-toggle-btn" aria-label="Buka/Tutup Menu Sidebar" title="Buka/Tutup Sidebar (Ctrl+B)">
+                    <span class="hamburger-bar"></span>
+                    <span class="hamburger-bar"></span>
+                    <span class="hamburger-bar"></span>
+                </button>
+                <div class="topbar-breadcrumb">
+                    <span class="breadcrumb-root">WisataKite Admin</span>
+                    <span class="breadcrumb-sep">/</span>
+                    <span id="current-section-name" class="breadcrumb-active">Beranda</span>
+                </div>
+            </div>
+
+            <div class="topbar-right">
+                <a href="../index.php" target="_blank" class="topbar-link-web" title="Kunjungi Website Publik">
+                    <span>🌐</span>
+                    <span class="hide-mobile">Lihat Website</span>
+                </a>
+                <div class="topbar-profile-chip">
+                    <img src="../assets/img/admin.png" alt="Avatar" class="topbar-avatar">
+                    <div class="topbar-profile-text hide-mobile">
+                        <span class="topbar-name"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
+                        <span class="topbar-role">Admin</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
         <div class="content">
 
             <?php if (isset($_GET['alert'])): ?>
                 <?php if ($_GET['alert'] === 'gagal_ekstensi' || $_GET['alert'] === 'gagal_ekstensi_izin'): ?>
-                    <div class="alert alert-error">Format berkas tidak didukung! Format yang diizinkan: PNG, JPG, JPEG, GIF, PDF.</div>
+                    <div class="alert alert-error">⚠️ Format berkas tidak didukung! Format yang diizinkan: PNG, JPG, JPEG, GIF, PDF.</div>
                 <?php elseif ($_GET['alert'] === 'gagal_ukuran' || $_GET['alert'] === 'gagal_ukuran_izin'): ?>
-                    <div class="alert alert-error">Ukuran berkas melebihi batas maksimal 1 MB!</div>
+                    <div class="alert alert-error">⚠️ Ukuran berkas melebihi batas maksimal 1 MB!</div>
                 <?php endif; ?>
             <?php endif; ?>
 
-            <!-- HOME -->
-            <section class="welcome-banner" id="home">
-                <div class="welcome-text">
-                    <h1>Selamat Datang, <?php echo htmlspecialchars($_SESSION['username']); ?>! 👋</h1>
-                    <p>Kelola seluruh data destinasi, akun pengguna, dan reservasi wisata Bangka Belitung dengan mudah.</p>
+            <!-- ========================================================
+                 TAB 1: HOME (BERANDA DASHBOARD)
+                 ======================================================== -->
+            <section class="admin-tab-section active" id="home">
+                <div class="welcome-banner">
+                    <div class="welcome-text">
+                        <h1>Selamat Datang, <?php echo htmlspecialchars($_SESSION['username']); ?>! 👋</h1>
+                        <p>Kelola seluruh data destinasi, akun pengguna, dan reservasi wisata Bangka Belitung dengan mudah dari panel kendali ini.</p>
+                        <div class="welcome-quick-links">
+                            <a href="#destinasi" class="welcome-btn btn-primary" data-tab-switch="destinasi">🗺️ Kelola Destinasi</a>
+                            <a href="#pemesanan" class="welcome-btn btn-secondary" data-tab-switch="pemesanan">🎫 Cek Pemesanan</a>
+                        </div>
+                    </div>
+                    <div class="welcome-img">
+                        <img src="../assets/img/admin.png" alt="WisataKite Admin">
+                    </div>
                 </div>
-                <div class="welcome-img">
-                    <img src="../assets/img/admin.png" alt="WisataKite Admin">
+
+                <!-- Pemberitahuan Pengajuan Baru -->
+                <?php if ((int)$total_destinasi_masuk > 0): ?>
+                    <div class="dashboard-notice-banner">
+                        <div class="notice-content">
+                            <strong>🔔 Ada <?php echo (int)$total_destinasi_masuk; ?> pengajuan destinasi baru!</strong>
+                            <p>Segera tinjau status dan kelengkapan dokumen izin destinasi yang diajukan mitra.</p>
+                        </div>
+                        <a href="#destinasi" class="notice-btn" data-tab-switch="destinasi">Tinjau Sekarang &rarr;</a>
+                    </div>
+                <?php endif; ?>
+
+                <!-- Ringkasan Statistik Utama -->
+                <div class="dashboard-stats-grid">
+                    <div class="dash-stat-card">
+                        <div class="dash-stat-header">
+                            <span class="dash-stat-icon">👥</span>
+                            <span class="dash-stat-badge"><?php echo (int)$total_admin; ?> Admin, <?php echo (int)$total_user; ?> User</span>
+                        </div>
+                        <div class="dash-stat-value"><?php echo (int)$total_akun; ?></div>
+                        <div class="dash-stat-label">Total Akun Terdaftar</div>
+                        <a href="#akun" class="dash-stat-link" data-tab-switch="akun">Buka Manajemen Akun &rarr;</a>
+                    </div>
+
+                    <div class="dash-stat-card">
+                        <div class="dash-stat-header">
+                            <span class="dash-stat-icon">🗺️</span>
+                            <span class="dash-stat-badge badge-green"><?php echo (int)$total_destinasi_diterima; ?> Aktif</span>
+                        </div>
+                        <div class="dash-stat-value"><?php echo (int)$total_destinasi; ?></div>
+                        <div class="dash-stat-label">Destinasi Wisata</div>
+                        <a href="#destinasi" class="dash-stat-link" data-tab-switch="destinasi">Buka Destinasi Wisata &rarr;</a>
+                    </div>
+
+                    <div class="dash-stat-card">
+                        <div class="dash-stat-header">
+                            <span class="dash-stat-icon">🎫</span>
+                            <span class="dash-stat-badge badge-purple"><?php echo (int)$total_pemesanan; ?> Reservasi</span>
+                        </div>
+                        <div class="dash-stat-value"><?php echo (int)$total_pemesanan; ?></div>
+                        <div class="dash-stat-label">Total Pemesanan Masuk</div>
+                        <a href="#pemesanan" class="dash-stat-link" data-tab-switch="pemesanan">Buka Data Pemesanan &rarr;</a>
+                    </div>
+
+                    <div class="dash-stat-card">
+                        <div class="dash-stat-header">
+                            <span class="dash-stat-icon">📋</span>
+                            <span class="dash-stat-badge badge-blue"><?php echo (int)$total_informasi; ?> Akun</span>
+                        </div>
+                        <div class="dash-stat-value"><?php echo (int)$total_informasi; ?></div>
+                        <div class="dash-stat-label">Informasi Lengkap Akun</div>
+                        <a href="#informasi" class="dash-stat-link" data-tab-switch="informasi">Buka Informasi Lengkap &rarr;</a>
+                    </div>
+                </div>
+
+                <!-- Aksi Cepat -->
+                <div class="dashboard-actions-card">
+                    <h3 class="dash-card-title">⚡ Aksi Cepat</h3>
+                    <div class="dash-actions-list">
+                        <a href="tambah_destinasi.php" class="dash-action-btn">
+                            <span class="action-icon">➕</span>
+                            <div class="action-text">
+                                <strong>Tambah Destinasi</strong>
+                                <small>Unggah destinasi wisata baru</small>
+                            </div>
+                        </a>
+                        <a href="tambah_akun.php" class="dash-action-btn">
+                            <span class="action-icon">👤</span>
+                            <div class="action-text">
+                                <strong>Buat Akun Baru</strong>
+                                <small>Tambah admin atau akun user</small>
+                            </div>
+                        </a>
+                        <a href="tambah_pemesanan.php" class="dash-action-btn">
+                            <span class="action-icon">🎫</span>
+                            <div class="action-text">
+                                <strong>Tambah Pemesanan</strong>
+                                <small>Input reservasi manual</small>
+                            </div>
+                        </a>
+                        <a href="../index.php" target="_blank" class="dash-action-btn">
+                            <span class="action-icon">🌐</span>
+                            <div class="action-text">
+                                <strong>Pratinjau Website</strong>
+                                <small>Buka tampilan publik WisataKite</small>
+                            </div>
+                        </a>
+                    </div>
                 </div>
             </section>
 
-            <!-- AKUN -->
-            <section class="admin-section" id="akun">
+            <!-- ========================================================
+                 TAB 2: KELOLA AKUN
+                 ======================================================== -->
+            <section class="admin-tab-section admin-section" id="akun">
                 <div class="section-header">
                     <h2>👥 Manajemen Akun</h2>
                     <a href="tambah_akun.php" class="btn-tambah">+ Buat Akun Baru</a>
@@ -133,8 +332,10 @@ require_once __DIR__ . '/../actions/admin/data_aksi.php';
                 </div>
             </section>
 
-            <!-- INFORMASI PRIBADI -->
-            <section class="admin-section" id="informasi">
+            <!-- ========================================================
+                 TAB 3: INFORMASI PRIBADI
+                 ======================================================== -->
+            <section class="admin-tab-section admin-section" id="informasi">
                 <div class="section-header">
                     <h2>📋 Informasi Lengkap Akun</h2>
                     <a href="tambah_akun.php" class="btn-tambah">+ Tambah Akun</a>
@@ -188,8 +389,10 @@ require_once __DIR__ . '/../actions/admin/data_aksi.php';
                 </div>
             </section>
 
-            <!-- DESTINASI -->
-            <section class="admin-section" id="destinasi">
+            <!-- ========================================================
+                 TAB 4: DESTINASI WISATA
+                 ======================================================== -->
+            <section class="admin-tab-section admin-section" id="destinasi">
                 <div class="section-header">
                     <h2>🗺️ Destinasi Wisata</h2>
                     <a href="tambah_destinasi.php" class="btn-tambah">+ Tambah Destinasi</a>
@@ -273,8 +476,10 @@ require_once __DIR__ . '/../actions/admin/data_aksi.php';
                 </div>
             </section>
 
-            <!-- PEMESANAN -->
-            <section class="admin-section" id="pemesanan">
+            <!-- ========================================================
+                 TAB 5: PEMESANAN & RESERVASI
+                 ======================================================== -->
+            <section class="admin-tab-section admin-section" id="pemesanan">
                 <div class="section-header">
                     <h2>🎫 Data Reservasi & Pemesanan</h2>
                     <a href="tambah_pemesanan.php" class="btn-tambah">+ Tambah Pemesanan</a>
@@ -352,5 +557,7 @@ require_once __DIR__ . '/../actions/admin/data_aksi.php';
     </main>
 </div>
 
+<!-- Admin Scripts -->
+<script src="../assets/js/admin.js"></script>
 </body>
 </html>

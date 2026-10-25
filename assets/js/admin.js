@@ -1,189 +1,218 @@
-// assets/js/admin.js - WisataKite Admin Panel Interactions
-document.addEventListener('DOMContentLoaded', function () {
+// assets/js/admin.js - WisataKite Admin Panel Interactions & Navigation
+(function () {
     'use strict';
 
-    const wrapper = document.querySelector('.admin-wrapper');
-    const toggleBtn = document.getElementById('admin-sidebar-toggle');
-    const closeBtn = document.getElementById('sidebar-close-btn');
-    const overlay = document.getElementById('admin-sidebar-overlay');
-    const menuLinks = document.querySelectorAll('.menu li a');
-    const sectionNameEl = document.getElementById('current-section-name');
+    document.addEventListener('DOMContentLoaded', function () {
+        const wrapper = document.querySelector('.admin-wrapper');
+        const sidebar = document.getElementById('admin-sidebar');
+        const toggleBtn = document.getElementById('admin-sidebar-toggle');
+        const closeBtn = document.getElementById('sidebar-close-btn');
+        const overlay = document.getElementById('admin-sidebar-overlay');
+        const menuLinks = document.querySelectorAll('.menu li a');
+        const sectionNameEl = document.getElementById('current-section-name');
+        const tabSections = document.querySelectorAll('.admin-tab-section');
 
-    // Section Titles Map
-    const sectionTitles = {
-        '#home': 'Beranda',
-        '#akun': 'Kelola Akun',
-        '#informasi': 'Informasi Lengkap Akun',
-        '#destinasi': 'Destinasi Wisata',
-        '#pemesanan': 'Pemesanan'
-    };
+        // Section Titles Map
+        const sectionTitles = {
+            'home': 'Beranda',
+            'akun': 'Kelola Akun',
+            'informasi': 'Informasi Pribadi',
+            'destinasi': 'Destinasi Wisata',
+            'pemesanan': 'Pemesanan',
+            'semua': 'Semua Bagian'
+        };
 
-    /* -------------------------------------------------------------
-       1. SIDEBAR TOGGLE (OPEN / CLOSE)
-       ------------------------------------------------------------- */
-    const isMobile = () => window.innerWidth <= 768;
+        const isMobile = () => window.innerWidth <= 768;
 
-    // Restore desktop preference from localStorage
-    if (!isMobile() && localStorage.getItem('admin_sidebar_collapsed') === '1') {
-        if (wrapper) wrapper.classList.add('sidebar-collapsed');
-    }
+        /* -------------------------------------------------------------
+           1. RESTORE DESKTOP SIDEBAR STATE
+           ------------------------------------------------------------- */
+        if (!isMobile()) {
+            const savedState = localStorage.getItem('wisatakite_sidebar_collapsed');
+            if (savedState === '1' && wrapper) {
+                wrapper.classList.add('sidebar-collapsed');
+            }
+        }
 
-    function toggleSidebar() {
-        if (!wrapper) return;
-        if (isMobile()) {
-            const isOpen = wrapper.classList.toggle('sidebar-open');
+        /* -------------------------------------------------------------
+           2. SIDEBAR TOGGLE (OPEN / CLOSE)
+           ------------------------------------------------------------- */
+        function toggleSidebar() {
+            if (!wrapper) return;
+
+            if (isMobile()) {
+                // Mobile: Drawer off-canvas toggle
+                const isOpen = wrapper.classList.toggle('sidebar-open');
+                if (overlay) {
+                    if (isOpen) {
+                        overlay.classList.add('active');
+                        document.body.style.overflow = 'hidden';
+                    } else {
+                        closeMobileSidebar();
+                    }
+                }
+            } else {
+                // Desktop: Mini-sidebar / Collapsed toggle
+                const isCollapsed = wrapper.classList.toggle('sidebar-collapsed');
+                localStorage.setItem('wisatakite_sidebar_collapsed', isCollapsed ? '1' : '0');
+            }
+        }
+
+        function closeMobileSidebar() {
+            if (!wrapper) return;
+            wrapper.classList.remove('sidebar-open');
             if (overlay) {
-                if (isOpen) {
-                    overlay.style.display = 'block';
-                    requestAnimationFrame(() => overlay.classList.add('active'));
-                    document.body.style.overflow = 'hidden';
-                } else {
-                    closeMobileSidebar();
-                }
+                overlay.classList.remove('active');
             }
-        } else {
-            const isCollapsed = wrapper.classList.toggle('sidebar-collapsed');
-            localStorage.setItem('admin_sidebar_collapsed', isCollapsed ? '1' : '0');
+            document.body.style.overflow = '';
         }
-    }
 
-    function closeMobileSidebar() {
-        if (!wrapper) return;
-        wrapper.classList.remove('sidebar-open');
-        if (overlay) {
-            overlay.classList.remove('active');
-            setTimeout(() => { overlay.style.display = 'none'; }, 300);
-        }
-        document.body.style.overflow = '';
-    }
-
-    if (toggleBtn) {
-        toggleBtn.addEventListener('click', toggleSidebar);
-    }
-    if (closeBtn) {
-        closeBtn.addEventListener('click', closeMobileSidebar);
-    }
-    if (overlay) {
-        overlay.addEventListener('click', closeMobileSidebar);
-    }
-
-    window.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && isMobile() && wrapper && wrapper.classList.contains('sidebar-open')) {
-            closeMobileSidebar();
-        }
-    });
-
-    window.addEventListener('resize', function () {
-        if (!isMobile() && wrapper && wrapper.classList.contains('sidebar-open')) {
-            closeMobileSidebar();
-        }
-    });
-
-    /* -------------------------------------------------------------
-       2. ACTIVE MENU INDICATOR & SCROLLSPY
-       ------------------------------------------------------------- */
-    function setActiveMenu(targetHash) {
-        if (!targetHash) return;
-        let matched = false;
-
-        menuLinks.forEach(link => {
-            const href = link.getAttribute('href');
-            if (href === targetHash) {
-                link.classList.add('active-menu');
-                matched = true;
-            } else if (href && href.startsWith('#')) {
-                link.classList.remove('active-menu');
-            }
-        });
-
-        if (matched && sectionNameEl && sectionTitles[targetHash]) {
-            sectionNameEl.textContent = sectionTitles[targetHash];
-        }
-    }
-
-    // Click handler for menu items
-    menuLinks.forEach(link => {
-        const href = link.getAttribute('href');
-        if (href && href.startsWith('#')) {
-            link.addEventListener('click', function (e) {
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', function (e) {
                 e.preventDefault();
-                const targetId = href.substring(1);
-                const targetElem = document.getElementById(targetId);
-
-                // Update active indicator immediately
-                setActiveMenu(href);
-
-                // Smooth scroll to section with topbar offset
-                if (targetElem) {
-                    const topbarHeight = 70;
-                    const elemPosition = targetElem.getBoundingClientRect().top + window.pageYOffset;
-                    window.scrollTo({
-                        top: elemPosition - topbarHeight,
-                        behavior: 'smooth'
-                    });
-                }
-
-                // Update URL hash without jumping
-                if (history.pushState) {
-                    history.pushState(null, null, href);
-                } else {
-                    window.location.hash = href;
-                }
-
-                // If on mobile, close the sidebar drawer after clicking
-                if (isMobile()) {
-                    closeMobileSidebar();
-                }
+                toggleSidebar();
             });
         }
-    });
 
-    // ScrollSpy: Update active menu as user scrolls
-    const trackedSections = document.querySelectorAll('section[id]');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                closeMobileSidebar();
+            });
+        }
 
-    function handleScrollSpy() {
-        const scrollPosition = window.scrollY + 120; // offset for topbar
+        if (overlay) {
+            overlay.addEventListener('click', function () {
+                closeMobileSidebar();
+            });
+        }
 
-        let currentSectionId = '';
-        trackedSections.forEach(section => {
-            const top = section.offsetTop;
-            const height = section.offsetHeight;
-            if (scrollPosition >= top && scrollPosition < top + height) {
-                currentSectionId = section.getAttribute('id');
+        // Close mobile drawer on ESC key
+        window.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && isMobile() && wrapper && wrapper.classList.contains('sidebar-open')) {
+                closeMobileSidebar();
+            }
+            // Keyboard shortcut Ctrl+B or Cmd+B to toggle sidebar
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'b' || e.key === 'B')) {
+                e.preventDefault();
+                toggleSidebar();
             }
         });
 
-        // Fallback for top of page
-        if (window.scrollY < 100) {
-            currentSectionId = 'home';
-        }
+        // Close mobile drawer when window resized to desktop
+        window.addEventListener('resize', function () {
+            if (!isMobile() && wrapper && wrapper.classList.contains('sidebar-open')) {
+                closeMobileSidebar();
+            }
+        });
 
-        if (currentSectionId) {
-            setActiveMenu('#' + currentSectionId);
-        }
-    }
+        /* -------------------------------------------------------------
+           3. TAB / SECTION SWITCHING ("PINDAH MENU")
+           ------------------------------------------------------------- */
+        function switchTab(targetId, updateHash) {
+            if (!targetId) targetId = 'home';
+            targetId = targetId.replace(/^#/, '');
 
-    let scrollTimeout;
-    window.addEventListener('scroll', function () {
-        if (scrollTimeout) cancelAnimationFrame(scrollTimeout);
-        scrollTimeout = requestAnimationFrame(handleScrollSpy);
-    }, { passive: true });
+            const validTabs = ['home', 'akun', 'informasi', 'destinasi', 'pemesanan', 'semua'];
+            if (!validTabs.includes(targetId)) {
+                targetId = 'home';
+            }
 
-    // Initial check on page load (e.g. if loaded with #destinasi or #akun)
-    if (window.location.hash) {
-        setActiveMenu(window.location.hash);
-        const initialElem = document.querySelector(window.location.hash);
-        if (initialElem) {
-            setTimeout(() => {
-                const topbarHeight = 70;
-                const elemPos = initialElem.getBoundingClientRect().top + window.pageYOffset;
-                window.scrollTo({
-                    top: elemPos - topbarHeight,
-                    behavior: 'smooth'
+            // A. Update Active State in Sidebar Menu
+            menuLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href === '#' + targetId || (targetId === 'home' && href === '#home')) {
+                    link.classList.add('active-menu');
+                } else if (href && href.startsWith('#')) {
+                    link.classList.remove('active-menu');
+                }
+            });
+
+            // B. Update Breadcrumb Title in Topbar
+            if (sectionNameEl && sectionTitles[targetId]) {
+                sectionNameEl.textContent = sectionTitles[targetId];
+            }
+
+            // C. Switch Visible Sections
+            if (targetId === 'semua') {
+                if (wrapper) wrapper.classList.add('show-all-tabs');
+                tabSections.forEach(sec => {
+                    sec.classList.add('active');
+                    sec.style.display = 'block';
                 });
-            }, 100);
+            } else {
+                if (wrapper) wrapper.classList.remove('show-all-tabs');
+                tabSections.forEach(sec => {
+                    const secId = sec.getAttribute('id');
+                    if (secId === targetId) {
+                        sec.classList.add('active');
+                        sec.style.display = 'block';
+                    } else {
+                        sec.classList.remove('active');
+                        sec.style.display = 'none';
+                    }
+                });
+            }
+
+            // D. Scroll to top of content smoothly
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+
+            // E. Update URL hash without reload
+            if (updateHash !== false) {
+                if (history.pushState) {
+                    history.pushState(null, null, '#' + targetId);
+                } else {
+                    window.location.hash = '#' + targetId;
+                }
+            }
+
+            // F. Close mobile sidebar after navigation
+            if (isMobile()) {
+                closeMobileSidebar();
+            }
         }
-    } else {
-        setActiveMenu('#home');
-    }
-});
+
+        // Click handler for Sidebar Menu Links
+        menuLinks.forEach(link => {
+            const href = link.getAttribute('href');
+            if (href && href.startsWith('#')) {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = href.substring(1);
+                    switchTab(targetId, true);
+                });
+            }
+        });
+
+        // Click handler for in-page quick links (e.g. buttons on Beranda overview cards)
+        document.addEventListener('click', function (e) {
+            const tabBtn = e.target.closest('[data-tab-switch]');
+            if (tabBtn) {
+                e.preventDefault();
+                const targetId = tabBtn.getAttribute('data-tab-switch');
+                switchTab(targetId, true);
+            }
+        });
+
+        // Listen for browser back / forward navigation
+        window.addEventListener('hashchange', function () {
+            const hash = window.location.hash ? window.location.hash.substring(1) : 'home';
+            switchTab(hash, false);
+        });
+
+        /* -------------------------------------------------------------
+           4. INITIALIZE ON PAGE LOAD
+           ------------------------------------------------------------- */
+        let initialTab = 'home';
+        if (window.location.hash) {
+            const cleanHash = window.location.hash.substring(1);
+            if (sectionTitles[cleanHash]) {
+                initialTab = cleanHash;
+            }
+        }
+        switchTab(initialTab, false);
+    });
+})();
