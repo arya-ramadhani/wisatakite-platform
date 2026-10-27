@@ -12,7 +12,6 @@
         const sectionNameEl = document.getElementById('current-section-name');
         const tabSections = document.querySelectorAll('.admin-tab-section');
 
-        // Section Titles Map
         const sectionTitles = {
             'home': 'Beranda',
             'akun': 'Kelola Akun',
