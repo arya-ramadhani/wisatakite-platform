@@ -231,40 +231,77 @@ require_once __DIR__ . '/../actions/admin/data_aksi.php';
                     </div>
                 </div>
 
-                <!-- Aksi Cepat -->
-                <div class="dashboard-actions-card">
-                    <h3 class="dash-card-title">⚡ Aksi Cepat</h3>
-                    <div class="dash-actions-list">
-                        <a href="tambah_destinasi.php" class="dash-action-btn">
-                            <span class="action-icon">➕</span>
-                            <div class="action-text">
-                                <strong>Tambah Destinasi</strong>
-                                <small>Unggah destinasi wisata baru</small>
+                <!-- Analytics Charts -->
+                <div class="dashboard-charts-row">
+                    <!-- Chart 1: Pemesanan per Kategori -->
+                    <div class="chart-card">
+                        <div class="chart-card-header">
+                            <div class="chart-card-title-group">
+                                <span class="chart-card-icon">🎫</span>
+                                <div>
+                                    <h3 class="chart-card-title">Pemesanan per Kategori</h3>
+                                    <p class="chart-card-subtitle">Distribusi wisata yang dipesan</p>
+                                </div>
                             </div>
-                        </a>
-                        <a href="tambah_akun.php" class="dash-action-btn">
-                            <span class="action-icon">👤</span>
-                            <div class="action-text">
-                                <strong>Buat Akun Baru</strong>
-                                <small>Tambah admin atau akun user</small>
+                            <span class="chart-total-badge"><?php echo (int)$total_pemesanan; ?> Total</span>
+                        </div>
+                        <div class="chart-canvas-wrap">
+                            <canvas id="chartPemesanan" aria-label="Grafik pemesanan per kategori" role="img"></canvas>
+                        </div>
+                        <div class="chart-legend-custom">
+                            <div class="chart-legend-item">
+                                <span class="legend-dot" style="background:#3b82f6"></span>
+                                <span class="legend-label">Pantai</span>
+                                <span class="legend-val"><?php echo (int)$total_pemesanan_pantai; ?></span>
                             </div>
-                        </a>
-                        <a href="tambah_pemesanan.php" class="dash-action-btn">
-                            <span class="action-icon">🎫</span>
-                            <div class="action-text">
-                                <strong>Tambah Pemesanan</strong>
-                                <small>Input reservasi manual</small>
+                            <div class="chart-legend-item">
+                                <span class="legend-dot" style="background:#8b5cf6"></span>
+                                <span class="legend-label">Pulau</span>
+                                <span class="legend-val"><?php echo (int)$total_pemesanan_pulau; ?></span>
                             </div>
-                        </a>
-                        <a href="../index.php" target="_blank" class="dash-action-btn">
-                            <span class="action-icon">🌐</span>
-                            <div class="action-text">
-                                <strong>Pratinjau Website</strong>
-                                <small>Buka tampilan publik WisataKite</small>
+                            <div class="chart-legend-item">
+                                <span class="legend-dot" style="background:#f59e0b"></span>
+                                <span class="legend-label">Sejarah</span>
+                                <span class="legend-val"><?php echo (int)$total_pemesanan_sejarah; ?></span>
                             </div>
-                        </a>
+                        </div>
+                    </div>
+
+                    <!-- Chart 2: Statistik Destinasi & Akun -->
+                    <div class="chart-card">
+                        <div class="chart-card-header">
+                            <div class="chart-card-title-group">
+                                <span class="chart-card-icon">📊</span>
+                                <div>
+                                    <h3 class="chart-card-title">Ringkasan Data Platform</h3>
+                                    <p class="chart-card-subtitle">Destinasi dan akun terdaftar</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chart-canvas-wrap chart-canvas-bar">
+                            <canvas id="chartStats" aria-label="Grafik statistik destinasi dan akun" role="img"></canvas>
+                        </div>
                     </div>
                 </div>
+
+                <!-- Data charts injected from PHP -->
+                <script>
+                    window._wisataChartData = {
+                        pemesanan: {
+                            pantai:  <?php echo (int)$total_pemesanan_pantai; ?>,
+                            pulau:   <?php echo (int)$total_pemesanan_pulau; ?>,
+                            sejarah: <?php echo (int)$total_pemesanan_sejarah; ?>
+                        },
+                        destinasi: {
+                            masuk:    <?php echo (int)$total_destinasi_masuk; ?>,
+                            diterima: <?php echo (int)$total_destinasi_diterima; ?>
+                        },
+                        akun: {
+                            admin: <?php echo (int)$total_admin; ?>,
+                            user:  <?php echo (int)$total_user; ?>
+                        }
+                    };
+                </script>
             </section>
 
             <!-- ========================================================
@@ -557,6 +594,8 @@ require_once __DIR__ . '/../actions/admin/data_aksi.php';
     </main>
 </div>
 
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <!-- Admin Scripts -->
 <script src="../assets/js/admin.js"></script>
 </body>

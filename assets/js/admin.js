@@ -154,10 +154,10 @@
             }
 
             // D. Scroll to top of content smoothly
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
+            const container = document.querySelector('.content-container');
+            if (container) {
+                container.scrollTo({ top: 0, behavior: 'smooth' });
+            }
 
             // E. Update URL hash without reload
             if (updateHash !== false) {
@@ -214,4 +214,126 @@
         }
         switchTab(initialTab, false);
     });
+})();
+
+/* =============================================================
+   5. CHART.JS — DASHBOARD ANALYTICS CHARTS
+   ============================================================= */
+(function initDashboardCharts() {
+    function renderCharts() {
+        if (typeof Chart === 'undefined') return;
+
+        const data = window._wisataChartData;
+        if (!data) return;
+
+        Chart.defaults.font.family = "'Inter', 'Segoe UI', sans-serif";
+        Chart.defaults.color = '#94a3b8';
+
+        /* Chart 1 – Doughnut: Pemesanan per Kategori */
+        const ctxDoughnut = document.getElementById('chartPemesanan');
+        if (ctxDoughnut && !ctxDoughnut._chartInstance) {
+            const total = data.pemesanan.pantai + data.pemesanan.pulau + data.pemesanan.sejarah;
+            ctxDoughnut._chartInstance = new Chart(ctxDoughnut, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Pantai', 'Pulau', 'Sejarah'],
+                    datasets: [{
+                        data: [data.pemesanan.pantai, data.pemesanan.pulau, data.pemesanan.sejarah],
+                        backgroundColor: ['#3b82f6', '#8b5cf6', '#f59e0b'],
+                        hoverBackgroundColor: ['#2563eb', '#7c3aed', '#d97706'],
+                        borderWidth: 3,
+                        borderColor: 'transparent',
+                        hoverOffset: 8
+                    }]
+                },
+                options: {
+                    cutout: '72%',
+                    animation: { animateRotate: true, duration: 900 },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function (ctx) {
+                                    const pct = total > 0 ? ((ctx.parsed / total) * 100).toFixed(1) : 0;
+                                    return ' ' + ctx.label + ': ' + ctx.parsed + ' (' + pct + '%)';
+                                }
+                            },
+                            backgroundColor: '#1e293b',
+                            titleColor: '#f1f5f9',
+                            bodyColor: '#cbd5e1',
+                            padding: 10,
+                            cornerRadius: 8
+                        }
+                    }
+                }
+            });
+        }
+
+        /* Chart 2 – Bar: Destinasi & Akun Stats */
+        const ctxBar = document.getElementById('chartStats');
+        if (ctxBar && !ctxBar._chartInstance) {
+            ctxBar._chartInstance = new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: ['Masuk', 'Diterima', 'Admin', 'User'],
+                    datasets: [{
+                        label: 'Jumlah',
+                        data: [
+                            data.destinasi.masuk,
+                            data.destinasi.diterima,
+                            data.akun.admin,
+                            data.akun.user
+                        ],
+                        backgroundColor: [
+                            'rgba(251,146,60,0.85)',
+                            'rgba(34,197,94,0.85)',
+                            'rgba(139,92,246,0.85)',
+                            'rgba(59,130,246,0.85)'
+                        ],
+                        hoverBackgroundColor: ['#f97316', '#16a34a', '#7c3aed', '#2563eb'],
+                        borderRadius: 8,
+                        borderSkipped: false,
+                        barThickness: 38
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: { duration: 900 },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#94a3b8', font: { size: 12 } },
+                            border: { color: 'transparent' }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: '#94a3b8', stepSize: 1, precision: 0 },
+                            grid: { color: 'rgba(148,163,184,0.12)' },
+                            border: { dash: [4, 4], color: 'transparent' }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#1e293b',
+                            titleColor: '#f1f5f9',
+                            bodyColor: '#cbd5e1',
+                            padding: 10,
+                            cornerRadius: 8,
+                            callbacks: {
+                                label: function (ctx) { return '  Jumlah: ' + ctx.parsed.y; }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', renderCharts);
+    } else {
+        renderCharts();
+    }
 })();
